@@ -1468,7 +1468,21 @@ runs:
         CONFIG_TMPFS_XATTR=y
         CONFIG_TMPFS_POSIX_ACL=y
         EOF
-
+        
+    - name: 🔌 Add USB Serial Drivers for ESP32
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "Add USB-UART Drivers for ESP32 Support"
+        cat >> "$COMMON_KERNEL_FOLDER/arch/arm64/configs/gki_defconfig" <<EOF
+        CONFIG_USB_SERIAL=m
+        CONFIG_USB_ACM=m
+        CONFIG_USB_SERIAL_CH341=m
+        CONFIG_USB_SERIAL_CP210X=m
+        CONFIG_USB_SERIAL_FTDI_SIO=m
+        CONFIG_USB_SERIAL_PL2303=m
+        EOF
+        
     - name: Add BBR
       if: ${{ env.OP_BBR == 'true' }}
       shell: bash
