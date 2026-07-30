@@ -1244,6 +1244,18 @@ runs:
         
         echo "::endgroup::"
 
+    - name: Add custom KernelSU Next manager
+      if: ${{ inputs.ksu_type == 'KSUN' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        cd "$KSUN_FOLDER"
+        PATCH_FILE="$GITHUB_WORKSPACE/patches/ksun-custom-manager.patch"
+        test -f "$PATCH_FILE"
+        git apply --check "$PATCH_FILE"
+        git apply "$PATCH_FILE"
+        grep -qF "c9e39903ce16b75fff5eca601b36e5386e91ae1416a09234d0f0cdd39884b718" kernel/manager/apk_sign.c
+
     - name: Add BBG
       if: ${{ env.OP_BBG == 'true' }}
       shell: bash

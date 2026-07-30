@@ -1,0 +1,21 @@
+diff --git a/kernel/manager/apk_sign.c b/kernel/manager/apk_sign.c
+index 2429b8c..0551cb3 100644
+--- a/kernel/manager/apk_sign.c
++++ b/kernel/manager/apk_sign.c
+@@ -381,9 +381,14 @@ bool is_manager_apk(char *path)
+ 	}
+ 
+ 	// pkg is `<real package>`
+-	if (strncmp(pkg, KSU_MANAGER_PACKAGE, sizeof(KSU_MANAGER_PACKAGE))) {
++	if (strncmp(pkg, KSU_MANAGER_PACKAGE, sizeof(KSU_MANAGER_PACKAGE)) &&
++	    strncmp(pkg, "com.wee.ksunext.custom",
++		    sizeof("com.wee.ksunext.custom"))) {
+ 		return false;
+ 	}
+ #endif
+-	return check_v2_signature(path, EXPECTED_MANAGER_SIZE, EXPECTED_MANAGER_HASH);
++	return check_v2_signature(path, EXPECTED_MANAGER_SIZE,
++				  EXPECTED_MANAGER_HASH) ||
++	       check_v2_signature(path, 0x358,
++				  "c9e39903ce16b75fff5eca601b36e5386e91ae1416a09234d0f0cdd39884b718");
+ }
